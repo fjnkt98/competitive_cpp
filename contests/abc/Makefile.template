@@ -1,4 +1,4 @@
-a: a.cpp
+a:a.cpp
 	g++ -std=c++17 -Wall a.cpp -o a.out
 b:b.cpp
 	g++ -std=c++17 -Wall b.cpp -o b.out
