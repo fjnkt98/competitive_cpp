@@ -7,16 +7,12 @@
 #include <cstdio>
 
 int main() {
+  char ch;
   std::string str;
   std::vector<int64_t> answer(26, 0);
-  while (true) {
-    char ch;
-    std::scanf("%c", &ch);
-    if (ch == '\n') {
-      break;
-    } else {
-      str.push_back(ch);
-    }
+  // While-space will be ignored.
+  while (std::cin >> ch) {
+    str.push_back(ch);
   }
 
   for (auto s : str) {
