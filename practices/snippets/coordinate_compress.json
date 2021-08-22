@@ -1,0 +1,22 @@
+{
+  "Coordinate Compress": {
+    "prefix": "coordinate_compress",
+    "body": [
+      "template <class T> std::vector<T> coordinate_compress(std::vector<T> input) {",
+      "  std::vector<T> output(input.size());",
+      "",
+      "  std::vector<T> copy = input;",
+      "  std::sort(copy.begin(), copy.end());",
+      "",
+      "  copy.erase(std::unique(copy.begin(), copy.end()), copy.end());",
+      "  for (size_t i = 0; i < input.size(); i++) {",
+      "    output.at(i) = std::distance(copy.begin(),std::lower_bound(copy.begin(), copy.end(), input.at(i)));",
+      "  }",
+      "",
+      "  return output;",
+      "}"
+
+    ],
+    "description": "A function that performs coordinate compress on std::vector"
+  }
+}
