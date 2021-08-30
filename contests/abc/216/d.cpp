@@ -1,11 +1,10 @@
 #include <iostream>
 #include <vector>
-#include <string>
 #include <algorithm>
-#include <map>
 #include <queue>
 
 int main() {
+  // Receive inputs
   int64_t N, M;
   std::cin >> N >> M;
   std::vector<std::vector<int64_t>> A(M);
@@ -23,23 +22,31 @@ int main() {
     bucket.at(A.at(i).back()).push_back(i);
   }
 
-  std::queue<int64_t> que;
+  // Find the index of the cylinder that has the ball of the same color among the
+  // currently visible balls, and store them in the queue.
+  std::queue<int64_t> completed_color;
   for (int64_t i = 0; i < N; i++) {
     if (bucket.at(i).size() == 2) {
-      que.push(i);
+      completed_color.push(i);
     }
   }
 
-  while (!que.empty()) {
-    int64_t target_color = que.front();
-    que.pop();
+  // Repeat until the queue is empty
+  while (!completed_color.empty()) {
+    // Pick out the color to be processed this loop from the queue
+    int64_t target_color = completed_color.front();
+    // Pop the color from front of queue
+    completed_color.pop();
 
+    // Remove the ball from the cylinders which has the ball of the color
     for (auto index : bucket.at(target_color)) {
       A.at(index).pop_back();
       if (!A.at(index).empty()) {
+        // Put the second ball from the top in the bucket
         bucket.at(A.at(index).back()).push_back(index);
+        // When the colors are complete, put them in the queue
         if (bucket.at(A.at(index).back()).size() == 2) {
-          que.push(A.at(index).back());
+          completed_color.push(A.at(index).back());
         }
       }
     }
