@@ -1,0 +1,16 @@
+[
+    {
+        "arguments": [
+            "g++",
+            "-c",
+            "-g",
+            "-std=c++17",
+            "-Wall",
+            "-o",
+            "a.out",
+            "a.cpp"
+        ],
+        "directory": "/home/wisteria/cpp_work/contests/abc/218",
+        "file": "a.cpp"
+    }
+]
