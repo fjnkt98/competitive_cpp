@@ -15,17 +15,24 @@ int main() {
     std::cin >> B.at(i);
   }
 
-  /* int64_t count = B.at(0) - A.at(0) + 1; */
-  int64_t answer = 1;
-  for (int64_t i = 1; i < N; i++) {
-    int64_t count = 0;
-    for (int64_t j = A.at(i - 1); j <= B.at(i - 1); j++) {
-      for (int64_t k = j; k <= B.at(i); k++) {
-        count++;
-      }
-    }
+  std::vector<std::vector<int64_t>> dp(N + 1, std::vector<int64_t>(30001, 0));
+  dp.at(0).at(0) = 1;
 
-    answer *= count;
+  std::vector<int64_t> cumsum(3001, 0);
+
+  for (int64_t i = 0; i < N; i++) {
+    cumsum.at(0) = dp.at(i).at(0);
+    for (int64_t j = 1; j <= 3000; j++) {
+      cumsum.at(j) = (cumsum.at(j - 1) + dp.at(i).at(j)) % 998244353;
+    }
+    for (int64_t j = A.at(i); j <= B.at(i); j++) {
+      dp.at(i + 1).at(j) += cumsum.at(j) % 998244353;
+    }
+  }
+
+  int64_t answer = 0;
+  for (int64_t i = 0; i <= 3000; i++) {
+    answer += dp.at(N).at(i);
     answer = answer % 998244353;
   }
 
