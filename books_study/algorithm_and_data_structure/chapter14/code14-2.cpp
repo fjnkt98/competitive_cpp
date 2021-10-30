@@ -55,7 +55,7 @@ int main() {
     }
 
     // The graph has negative cycle if update was occured in N times iteration
-    if (i == N - 1) {
+    if (i == N - 1 && update) {
       exist_negative_cycle = true;
     }
   }
