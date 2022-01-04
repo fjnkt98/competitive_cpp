@@ -1,34 +1,284 @@
 {
-	// Place your cpp_work ワークスペース snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
-	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
-	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
-	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
-	// Placeholders with the same ids are connected.
-	// Example:
-	// "Print to console": {
-	// 	"scope": "javascript,typescript",
-	// 	"prefix": "log",
-	// 	"body": [
-	// 		"console.log('$1');",
-	// 		"$2"
-	// 	],
-	// 	"description": "Log output to console"
-	// }
-	"main function for kyopro": {
-		"prefix": "main",
-		"body": [
-			"#include <iostream>",
+  // Place your cpp_work ワークスペース snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders.
+  // Placeholders with the same ids are connected.
+  // Example:
+  // "Print to console": {
+  // 	"scope": "javascript,typescript",
+  // 	"prefix": "log",
+  // 	"body": [
+  // 		"console.log('$1');",
+  // 		"$2"
+  // 	],
+  // 	"description": "Log output to console"
+  // }
+  "main function for kyopro": {
+    "prefix": "main",
+    "body": [
+      "#include <iostream>",
       "#include <vector>",
       "#include <string>",
       "#include <algorithm>",
       "",
       "int main() {",
       "  std::cout << \"Hello, World!\" << std::endl;",
-			"",
-			"  return 0;",
+      "",
+      "  return 0;",
       "}"
-		],
-		"description": "Basic main function for programing contest"
-	}
+    ],
+    "description": "Basic main function for programing contest"
+  },
+  "Union Find": {
+    "prefix": "UnionFind",
+    "body": [
+      "class UnionFind {",
+      " private:",
+      "   std::vector<int64_t> parent;",
+      "   std::vector<int64_t> size;",
+      "",
+      "  public:",
+      "   UnionFind(int64_t n)",
+      "   : parent(n, -1), size(n, 1)",
+      "   {",
+      "   }",
+      "",
+      "   // Return the root of the tree to which x belongs",
+      "   int64_t get_root(int64_t x) {",
+      "     if (parent.at(x) == -1) {",
+      "       return x;",
+      "     } else {",
+      "       return parent.at(x) = this->get_root(parent.at(x));",
+      "     }",
+      "   }",
+      "",
+      "   // Determine if x and y belong to the same tree",
+      "   bool is_same(int64_t x, int64_t y) {",
+      "     return this->get_root(x) == this->get_root(y);",
+      "   }",
+      "",
+      "   // Merge the group to which x belongs and the group to which y belongs",
+      "   bool unite(int64_t x, int64_t y) {",
+      "     // Move x and y to their root",
+      "     x = this->get_root(x);",
+      "     y = this->get_root(y);",
+      "",
+      "     // Do nothing when x and y are already in same group",
+      "     if (x == y) {",
+      "       return false;",
+      "     }",
+      "",
+      "     // union by size",
+      "     if (size.at(x) < size.at(y)) {",
+      "       std::swap(x, y);",
+      "     }",
+      "",
+      "     parent.at(y) = x;",
+      "     size.at(x) += size.at(y);",
+      "",
+      "     return true;",
+      "   }",
+      "",
+      "   // Size of the group to which x belongs",
+      "   int64_t get_size(int64_t x) {",
+      "     return size.at(this->get_root(x));",
+      "   }",
+      "};"
+    ],
+    "description": "Class implementation of Union Find(Disjoint Set Union)"
+  },
+  "Coordinate Compress": {
+    "prefix": "coordinate_compress",
+    "body": [
+      "template <class T> std::vector<T> coordinate_compress(std::vector<T> input) {",
+      "  std::vector<T> output(input.size());",
+      "",
+      "  std::vector<T> copy = input;",
+      "  std::sort(copy.begin(), copy.end());",
+      "",
+      "  copy.erase(std::unique(copy.begin(), copy.end()), copy.end());",
+      "  for (size_t i = 0; i < input.size(); i++) {",
+      "    output.at(i) = std::distance(copy.begin(),std::lower_bound(copy.begin(), copy.end(), input.at(i)));",
+      "  }",
+      "",
+      "  return output;",
+      "}"
+    ],
+    "description": "A function that performs coordinate compress on std::vector"
+  },
+  "Euclidean Algorithm": {
+    "prefix": "euclidean_algorithm",
+    "body": [
+      "int64_t gcd(int64_t x, int64_t y) {",
+      "  if (x < 0 || y < 0) return -1;",
+      "",
+      "  if (y == 0) return x;",
+      "  else return gcd(y, x % y);",
+      "}"
+    ],
+    "description": "Implementation of the Euclidean Algorithm"
+  },
+  "Eratosthenes Sieve": {
+    "prefix": "eratosthenes_sieve",
+    "body": [
+      "std::vector<int64_t> eratosthenes_sieve(int64_t N) {",
+      "  std::vector<int64_t> primes;",
+      "  std::vector<bool> is_prime(N + 1, true);",
+      "  is_prime.at(0) = false;",
+      "  is_prime.at(1) = false;",
+      "",
+      "  for (int64_t i = 2; i <= N; i++) {",
+      "    if (is_prime.at(i)) {",
+      "      primes.push_back(i);",
+      "      for (int64_t j = 2 * i; j <= N; j += i) {",
+      "        is_prime.at(j) = false;",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "  return primes;",
+      "}"
+    ],
+    "description": "Implementation of Eratosthenese Sieve"
+  },
+  "Iterative Power": {
+    "prefix": "iterative_power",
+    "body": [
+      "int64_t iterative_power(int64_t a, int64_t n, int64_t p) {",
+      "  if (n == 0) return 1;",
+      "  if (n == 1) return a % p;",
+      "  if (n % 2 == 1) return (a * iterative_power(a, n - 1, p)) % p;",
+      "",
+      "  int64_t t = iterative_power(a, n / 2, p);",
+      "  return (t * t) %p;",
+      "}"
+    ],
+    "description": "Implementation of Iterative Power"
+  },
+  "Choose Minimum": {
+    "prefix": "choose_minimum",
+    "body": [
+      "template<class T> bool choose_minimum(T& a, T b) {",
+      "  if (a > b) {",
+      "    a = b;",
+      "    return true;",
+      "  } else {",
+      "    return false;",
+      "  }",
+      "}"
+    ],
+    "description": "Implementation of choose_minimum function"
+  },
+  "Enumerate Dividers": {
+    "prefix": "enumereate_dividers",
+    "body": [
+      "std::vector<int64_t> enumerate_dividers(int64_t N) {",
+      "  std::vector<int64_t> dividers;",
+      "",
+      "  for (int64_t i = 1; i * i <= N; i++) {",
+      "    if (N % i == 0) {",
+      "      dividers.push_back(i);",
+      "",
+      "      if (N / i != i) {",
+      "        dividers.push_back(N / i);",
+      "      }",
+      "    }",
+      "  }",
+      "",
+      "  std::sort(dividers.begin(), dividers.end());",
+      "  return dividers;",
+      "}"
+    ],
+    "description": "Enumerate N's dividers"
+  },
+  "Prime Factorization": {
+    "prefix": "prime_factorize",
+    "body": [
+      "std::vector<std::pair<int64_t, int64_t>> prime_factorize(int64_t N) {",
+      "  std::vector<std::pair<int64_t, int64_t>> primes;",
+
+      "  for (int64_t i = 2; i * i <= N; i++) {",
+      "    if (N % i == 0) {",
+      "      int64_t ex = 0;",
+
+      "      while (N % i == 0) {",
+      "        ex++;",
+      "        N /= i;",
+      "      }",
+
+      "      primes.push_back({i, ex});",
+      "    }",
+      "  }",
+
+      "  if (N != 1) {",
+      "    primes.push_back({N, 1});",
+      "  }",
+
+      "  return primes;",
+      "}"
+    ],
+    "description": "Implementation of prime factorization"
+  },
+  "input N": {
+    "prefix": "inputN",
+    "body": ["int64_t N;", "std::cin >> N;"],
+    "description": "input N"
+  },
+  "input N and M": {
+    "prefix": "inputNM",
+    "body": ["int64_t N, M;", "std::cin >> N >> M;"],
+    "description": "input N and M"
+  },
+  "input 1D vector": {
+    "prefix": "inputVector1D",
+    "body": [
+      "std::vector<int64_t> A(N);",
+      "for (int64_t i = 0; i < N; i++) {",
+      "  std::cin >> A.at(i);",
+      "}",
+      ""
+    ],
+    "description": "input 1D vector"
+  },
+  "input 2D vector": {
+    "prefix": "inputVector2D",
+    "body": [
+      "std::vector<std::vector<int64_t>> A(N, std::vector<int64_t>(M));",
+      "for (int64_t i = 0; i < N; i++) {",
+      "  for (int64_t j = 0; j < M; j++) {",
+      "    std::cin >> A.at(i).at(j);",
+      "  }",
+      "}",
+      ""
+    ],
+    "description": "input 2D vector"
+  },
+  "output answer": {
+    "prefix": "outputAnswer",
+    "body": ["std::cout << answer << std::endl;"],
+    "description": "output answer"
+  },
+  "Output Yes": {
+    "prefix": "outputYes",
+    "body": ["std::cout << \"Yes\" << std::endl;"],
+    "description": "Output Yes"
+  },
+  "Output No": {
+    "prefix": "outputYes",
+    "body": ["std::cout << \"No\" << std::endl;"],
+    "description": "Output Yes"
+  },
+  "OK condition": {
+    "prefix": "condition",
+    "body": [
+      "if (ok) {",
+      "  std::cout << \"Yes\" << std::endl;",
+      "} else {",
+      "  std::cout << \"No\" << std::endl;",
+      "}"
+    ],
+    "description": "Output Yes or No according to ok variable"
+  }
 }
