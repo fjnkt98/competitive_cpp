@@ -266,9 +266,9 @@
     "description": "Output Yes"
   },
   "Output No": {
-    "prefix": "outputYes",
+    "prefix": "outputNo",
     "body": ["std::cout << \"No\" << std::endl;"],
-    "description": "Output Yes"
+    "description": "Output No"
   },
   "OK condition": {
     "prefix": "condition",
