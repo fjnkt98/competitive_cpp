@@ -2,179 +2,52 @@
 #include <iostream>
 #include <vector>
 
-// Implementation of ModInt
-// This class takes one parameter `mod` as template parameter.
-// This is the value that will be treated as the modulo.
-template <int64_t mod>
-class ModInt {
+// Class implementation of binominal coefficient
+class BinominalCoefficient {
  public:
-  // Default constructor
-  ModInt() : value_(0) {}
-
-  // Converting constructor
-  ModInt(int64_t n) {
-    // Error when n is a multiple of mod
-    assert(n == 0 || n % mod != 0);
-
-    int64_t x = n % mod;
-    if (x < 0) x += mod;
-    value_ = x;
-  }
-
-  int64_t value() const { return value_; }
-
-  // Return the N-th power of the value.
-  ModInt power(int64_t n) const {
-    assert(n >= 0);
-    ModInt x = *this;
-    ModInt r = 1;
-
-    while (n) {
-      if (n & 1) r *= x;
-      x *= x;
-      n >>= 1;
+  BinominalCoefficient(int64_t N, int64_t mod)
+      : N_(N),
+        mod_(mod),
+        factorial_(N + 1, 1),
+        inverse_element_(N + 1, 1),
+        inverse_factorial_(N + 1, 1) {
+    for (int64_t i = 2; i <= N; i++) {
+      factorial_.at(i) = factorial_.at(i - 1) * i % mod_;
+      inverse_element_.at(i) =
+          mod_ - inverse_element_.at(mod_ % i) * (mod_ / i) % mod_;
+      inverse_factorial_.at(i) =
+          inverse_factorial_.at(i - 1) * inverse_element_.at(i) % mod_;
     }
-
-    return r;
   }
 
-  // Return the inverse of the value.
-  ModInt inverse() const { return this->power(mod - 2); }
+  int64_t nCr(int64_t n, int64_t r) {
+    if (n > N_) return 0;
+    if (n < r) return 0;
+    if (n < 0 || r < 0) return 0;
 
-  // Overload prefix increment operator
-  ModInt& operator++() {
-    value_++;
-    if (value_ == mod) value_ = 0;
-
-    return *this;
-  }
-
-  // Overload prefix decrement operator
-  ModInt& operator--() {
-    if (value_ == 0) value_ = mod;
-    value_--;
-    return *this;
-  }
-
-  // Overload postfix increment operator
-  ModInt operator++(int) {
-    ModInt result = *this;
-    ++*this;
-    return result;
-  }
-
-  // Overload postfix decrement operator
-  ModInt operator--(int) {
-    ModInt result = *this;
-    --*this;
-    return result;
-  }
-
-  // Overload assignment operator `+=`
-  ModInt& operator+=(const ModInt& rhs) {
-    value_ += rhs.value_;
-    if (value_ >= mod) value_ -= mod;
-    return *this;
-  }
-
-  // Overload assignment operator `-=`
-  ModInt& operator-=(const ModInt& rhs) {
-    if (value_ < rhs.value_) value_ += mod;
-    value_ -= rhs.value_;
-    return *this;
-  }
-
-  // Overload assignment operator `*=`
-  ModInt& operator*=(const ModInt& rhs) {
-    value_ = value_ * rhs.value_ % mod;
-    return *this;
-  }
-
-  // Overload assignment operator `/=`
-  ModInt& operator/=(const ModInt& rhs) {
-    return *this = *this * rhs.inverse();
-  }
-
-  // Overload plus operator
-  ModInt operator+() const { return *this; }
-
-  // Overload minus operator
-  ModInt operator-() const { return ModInt() - *this; }
-
-  // Overload addition operator
-  friend ModInt operator+(const ModInt& lhs, const ModInt& rhs) {
-    return ModInt(lhs) += rhs;
-  }
-
-  // Overload subtraction operator
-  friend ModInt operator-(const ModInt& lhs, const ModInt& rhs) {
-    return ModInt(lhs) -= rhs;
-  }
-
-  // Overload multiplication operator
-  friend ModInt operator*(const ModInt& lhs, const ModInt& rhs) {
-    return ModInt(lhs) *= rhs;
-  }
-
-  // Overload division operator
-  friend ModInt operator/(const ModInt& lhs, const ModInt& rhs) {
-    return ModInt(lhs) /= rhs;
-  }
-
-  // Overload equal operator
-  friend bool operator==(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ == rhs.value_;
-  }
-
-  // Overload not-equal operator
-  friend bool operator!=(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ != rhs.value_;
-  }
-
-  // Overload comparison operator `<`
-  friend bool operator<(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ < rhs.value_;
-  }
-
-  // Overload comparison operator `<`
-  friend bool operator>(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ > rhs.value_;
-  }
-
-  // Overload comparison operator `<`
-  friend bool operator<=(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ <= rhs.value_;
-  }
-
-  // Overload comparison operator `<`
-  friend bool operator>=(const ModInt& lhs, const ModInt& rhs) {
-    return lhs.value_ >= rhs.value_;
-  }
-
-  // Overload stream operator
-  friend std::ostream& operator<<(std::ostream& os, const ModInt<mod>& x) {
-    return os << x.value_;
+    return factorial_.at(n) *
+           (inverse_factorial_.at(r) * inverse_factorial_.at(n - r) % mod_) %
+           mod_;
   }
 
  private:
-  int64_t value_;
+  int64_t N_;
+  int64_t mod_;
+  // Memo vector of factorial
+  std::vector<int64_t> factorial_;
+  // Memo vector of inverse element
+  std::vector<int64_t> inverse_element_;
+  // Memo vector of inverse element of factorial
+  std::vector<int64_t> inverse_factorial_;
 };
 
 int main() {
-  ModInt<1000000007> a = 22;
-  ModInt<1000000007> b = 43;
-  ModInt<1000000007> c = a;
+  int64_t N, k;
+  std::cin >> N >> k;
 
-  std::cout << (a < b) << std::endl;
-  std::cout << (a > b) << std::endl;
-  std::cout << (a <= b) << std::endl;
-  std::cout << (a >= b) << std::endl;
-  std::cout << (a < c) << std::endl;
-  std::cout << (a > c) << std::endl;
-  std::cout << (a <= c) << std::endl;
-  std::cout << (a >= c) << std::endl;
+  BinominalCoefficient bc(N + k, 1000000007);
 
-  std::cout << a << std::endl;
+  std::cout << bc.nCr(N + k - 1, N - 1) << std::endl;
 
   return 0;
 }
