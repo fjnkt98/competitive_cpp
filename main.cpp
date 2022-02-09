@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <vector>
 
@@ -12,6 +13,9 @@ class ModInt {
 
   // Converting constructor
   ModInt(int64_t n) {
+    // Error when n is a multiple of mod
+    assert(n == 0 || n % mod != 0);
+
     int64_t x = n % mod;
     if (x < 0) x += mod;
     value_ = x;
@@ -21,6 +25,7 @@ class ModInt {
 
   // Return the N-th power of the value.
   ModInt power(int64_t n) const {
+    assert(n >= 0);
     ModInt x = *this;
     ModInt r = 1;
 
