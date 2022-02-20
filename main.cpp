@@ -2,52 +2,70 @@
 #include <iostream>
 #include <vector>
 
-// Class implementation of binominal coefficient
-class BinominalCoefficient {
+class UnionFind {
+ private:
+  std::vector<int64_t> parent;
+  std::vector<int64_t> size;
+  std::vector<int64_t> rank;
+
  public:
-  BinominalCoefficient(int64_t N, int64_t mod)
-      : N_(N),
-        mod_(mod),
-        factorial_(N + 1, 1),
-        inverse_element_(N + 1, 1),
-        inverse_factorial_(N + 1, 1) {
-    for (int64_t i = 2; i <= N; i++) {
-      factorial_.at(i) = factorial_.at(i - 1) * i % mod_;
-      inverse_element_.at(i) =
-          mod_ - inverse_element_.at(mod_ % i) * (mod_ / i) % mod_;
-      inverse_factorial_.at(i) =
-          inverse_factorial_.at(i - 1) * inverse_element_.at(i) % mod_;
+  UnionFind(int64_t n) : parent(n, -1), size(n, 1), rank(n, 0) {}
+
+  // Return the root of the tree to which x belongs
+  int64_t get_root(int64_t x) {
+    if (parent.at(x) == -1) {
+      return x;
+    } else {
+      return parent.at(x) = get_root(parent.at(x));
     }
   }
 
-  int64_t nCr(int64_t n, int64_t r) {
-    if (n > N_) return 0;
-    if (n < r) return 0;
-    if (n < 0 || r < 0) return 0;
+  // Determine if x and y belong to the same tree
+  bool is_same(int64_t x, int64_t y) { return get_root(x) == get_root(y); }
 
-    return factorial_.at(n) *
-           (inverse_factorial_.at(r) * inverse_factorial_.at(n - r) % mod_) %
-           mod_;
+  // Merge the group to which x belongs and the group to which y belongs
+  bool unite(int64_t x, int64_t y) {
+    // Move x and y to their root
+    x = get_root(x);
+    y = get_root(y);
+
+    // Do nothing when x and y are already in same group
+    if (x == y) return false;
+
+    // Union by rank
+    if (rank.at(x) < rank.at(y)) std::swap(x, y);
+
+    // Let y be the parent of x
+    parent.at(y) = x;
+
+    // Adjustment rank of x
+    if (rank.at(x) == rank.at(y)) ++rank.at(x);
+    // Compute size of x
+    size.at(x) += size.at(y);
+
+    return true;
   }
 
- private:
-  int64_t N_;
-  int64_t mod_;
-  // Memo vector of factorial
-  std::vector<int64_t> factorial_;
-  // Memo vector of inverse element
-  std::vector<int64_t> inverse_element_;
-  // Memo vector of inverse element of factorial
-  std::vector<int64_t> inverse_factorial_;
+  // Size of the group to which x belongs
+  int64_t get_size(int64_t x) { return size.at(get_root(x)); }
 };
 
 int main() {
-  int64_t N, k;
-  std::cin >> N >> k;
+  int64_t N, M;
+  std::cin >> N >> M;
+  UnionFind uf(N);
+  for (int64_t i = 0; i < M; i++) {
+    int64_t a, b;
+    std::cin >> a >> b;
 
-  BinominalCoefficient bc(N + k, 1000000007);
+    if (uf.is_same(a, b)) {
+      std::cout << "Yes" << std::endl;
+    } else {
+      std::cout << "No" << std::endl;
+    }
 
-  std::cout << bc.nCr(N + k - 1, N - 1) << std::endl;
+    uf.unite(a, b);
+  }
 
   return 0;
 }
